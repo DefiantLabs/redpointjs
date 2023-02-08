@@ -1,6 +1,7 @@
 /*
    Redpoint Backend is what submits trades to the chain. To do so you'll need a valid JWT proving the user owns the given address.
    See flow.ts which can submit a signed grant to the backend, which will return the JWT.
+   The swap backend will combine the user's swap and the arbitrage swap into a single TX and submit it on chain.
 */
 import { SimulatedSwapRequest } from "./simulator";
 import axios from "axios";

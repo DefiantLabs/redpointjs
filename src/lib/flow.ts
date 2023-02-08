@@ -8,7 +8,10 @@ import { GenericAuthorization } from "cosmjs-types/cosmos/authz/v1beta1/authz";
 
 const { grant } = cosmos.authz.v1beta1.MessageComposer.withTypeUrl;
 
-export const redpointSignin = async() => {
+// Prompt the user to sign a grant authorizing the swap backend (see README) to submit TXs on their behalf for 24 hours.
+// This is necessary because the swap backend will combine the user's swap and the arbitrage swap into a single TX.
+// This function returns a JWT. ALL subsequent API calls to the swap backend must include this JWT. 
+export const authUserToBackend = async() => {
       const keplrStore = useKeplrStore();
       const arbitrageWallet = await getGranteeAddress();
       const msg = grantAuthZMsg(keplrStore.address, arbitrageWallet);
@@ -19,7 +22,10 @@ export const redpointSignin = async() => {
         authz_grant: base64AuthZTx,
       });
 
-      // ... TODO: Presumably you will want to put the token in local storage ... 
+      // TODO: Maybe you will want to put this token in local storage. 
+      // Note that this is the JWT used with the BACKEND, not with the simulator.
+      // For every subsequent web request made to the backend (for the next 24 hours), this JWT can be used. After 24 hours it will expire.
+      // Once it expires you must get a new JWT by calling this function again.
       return token;
     }
 
